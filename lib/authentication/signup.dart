@@ -171,8 +171,8 @@ class _SignupState extends State<Signup> {
                               ? SizedBox(width: 10, height: 10)
                               : TextButton.icon(
                                   style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStatePropertyAll(Colors.black),
+                                    backgroundColor: MaterialStatePropertyAll(
+                                        Colors.blueGrey),
                                     alignment: Alignment.center,
                                   ),
                                   onPressed: () {
@@ -195,7 +195,20 @@ class _SignupState extends State<Signup> {
                       ),
                     ],
                   ),
-                  Text("Do you have Driving Licence ?"),
+                  Row(
+                    children: [
+                      SizedBox(width: 30),
+                      Text(
+                        "Do you have Driving Licence ?",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
+                      Spacer(),
+                    ],
+                  ),
+
                   Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: DropdownButtonFormField(
@@ -223,6 +236,17 @@ class _SignupState extends State<Signup> {
                           });
                         },
                       )),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Container(
+                      width: double.infinity,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black)),
+                      child: Center(child: Text("submit your licence here !")),
+                      //LinearProgressIndicator(),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: TextField(

@@ -52,7 +52,9 @@ class _SigninState extends State<Signin> {
             height: MediaQuery.of(context).size.height,
             child: Column(
               children: [
-                Lottie.asset('assets/Animation.json'),
+                SizedBox(
+                    height: 300,
+                    child: Lottie.asset('assets/signinanimation.json')),
                 Row(
                   children: [
                     Spacer(),
@@ -148,7 +150,7 @@ class _SigninState extends State<Signin> {
                           MaterialStateProperty.all(Colors.blueGrey),
                       minimumSize: MaterialStateProperty.all(Size(200, 50))),
                   child: Text(
-                    "Sign Up",
+                    "Sign In",
                     style: GoogleFonts.abhayaLibre(
                         fontSize: 25, color: Colors.black),
                   ),
