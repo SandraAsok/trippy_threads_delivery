@@ -1,8 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trippy_threads_delivery/home/home.dart';
 
 class Signin extends StatefulWidget {
   const Signin({super.key});
@@ -43,6 +46,37 @@ class _SigninState extends State<Signin> {
     });
   }
 
+  Future signin() async {
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email.text, password: pass.text);
+      final SharedPreferences preferences =
+          await SharedPreferences.getInstance();
+      preferences.setBool('user', true);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ));
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Text("something went wrong"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("ok"))
+            ],
+          );
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +112,7 @@ class _SigninState extends State<Signin> {
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.all(15.0),
+                  padding: EdgeInsets.all(15.0),
                   child: TextField(
                     controller: email,
                     keyboardType: TextInputType.emailAddress,
@@ -132,18 +166,34 @@ class _SigninState extends State<Signin> {
                   ),
                 ),
                 // minheight,
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 300),
+                  child: TextButton(
+                      onPressed: () {}, child: Text("forgot password ?")),
+                ),
                 // minheight,
                 ElevatedButton(
                   onPressed: () {
                     validateEmail(email.text);
                     if (errormessage.isEmpty) {
-                      //signup();
+                      signin();
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Text("supplied credential is incorrect"),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("ok"))
+                            ],
+                          );
+                        },
+                      );
                     }
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) => HomeScreen(),
-                    //     ));
                   },
                   style: ButtonStyle(
                       backgroundColor:
@@ -155,30 +205,7 @@ class _SigninState extends State<Signin> {
                         fontSize: 25, color: Colors.black),
                   ),
                 ),
-                // minheight,
-                // minheight,
-                Row(
-                  children: [
-                    Spacer(),
-                    Text(
-                      "Already a User? ",
-                      style: GoogleFonts.abhayaLibre(color: Colors.black),
-                    ),
-                    TextButton(
-                        onPressed: () {},
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //       builder: (context) => SignInScreen(),
-                        //     ));
-                        child: Text(
-                          "Sign In",
-                          style: GoogleFonts.abhayaLibre(
-                              color: Colors.lightBlueAccent, fontSize: 18),
-                        )),
-                    Spacer(),
-                  ],
-                ),
+
                 Spacer(),
               ],
             ),
