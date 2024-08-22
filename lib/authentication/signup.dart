@@ -73,6 +73,7 @@ class _SignupState extends State<Signup> {
         'vehicle': haveLicence,
         'licence': licence,
         'email': email.text,
+        'status': "pending",
       });
       final SharedPreferences preferences =
           await SharedPreferences.getInstance();

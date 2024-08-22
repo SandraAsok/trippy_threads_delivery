@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trippy_threads_delivery/home/home.dart';
+import 'package:trippy_threads_delivery/utilities/bottomnav.dart';
 
 class Signin extends StatefulWidget {
   const Signin({super.key});
@@ -56,7 +56,7 @@ class _SigninState extends State<Signin> {
       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => HomeScreen(),
+            builder: (context) => BottomNav(),
           ));
     } catch (e) {
       showDialog(

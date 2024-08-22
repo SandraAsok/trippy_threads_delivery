@@ -37,8 +37,9 @@ dependencies:
     sdk: flutter
   google_fonts: ^6.2.1
   image_picker: ^1.1.2
-  lottie: null
+  lottie: ^3.1.2
   shared_preferences: null
+  url_launcher: ^6.3.0
 
 dev_dependencies:
   flutter_lints: ^3.0.0
@@ -58,6 +59,7 @@ flutter:
   assets:
     - assets/Animation.json
     - assets/signinanimation.json
+    - assets/dashboard.json
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
