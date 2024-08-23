@@ -27,7 +27,6 @@ class _OrdersState extends State<Orders> {
               .collection('assigned_orders')
               .where('employee_email',
                   isEqualTo: FirebaseAuth.instance.currentUser!.email)
-              // .orderBy('assigned_date', descending: true)
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -48,114 +47,109 @@ class _OrdersState extends State<Orders> {
               itemCount: docs.length,
               itemBuilder: (context, index) {
                 final doc = docs[index];
-                final orderDetails =
-                    List<Map<String, dynamic>>.from(doc['order_details']);
 
-                return Column(
-                  children: orderDetails.map((order) {
-                    String orderId = order['orderId'];
-                    selectedvalue = selectedValues[orderId];
-                    return Container(
-                        height: 300,
-                        decoration: BoxDecoration(
-                          color: Colors.green[50],
-                        ),
-                        margin: EdgeInsets.all(10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Order ID : ${order['orderId']}"),
-                            Text("Address : ${order['address']}"
-                                .split(",")
-                                .join("\n")),
-                            Text("Product: ${order['product_name']}"),
-                            Text("Quantity: ${order['quantity']}"),
-                            Text("Total Price: ₹${order['totalPrice']}"),
-                            SizedBox(
-                              height: 50,
-                              child: StreamBuilder(
-                                  stream: FirebaseFirestore.instance
-                                      .collection('orders')
-                                      .doc(orderId)
-                                      .snapshots(),
-                                  builder: (context, snapshot) {
-                                    return DropdownButtonFormField(
-                                      hint: Text(snapshot.data!.get('track')),
-                                      value: selectedvalue,
-                                      items: [
-                                        'recieved',
-                                        'out for delivery',
-                                        'nearest hub',
-                                        'delivered',
-                                        'return',
-                                        'cancelled',
-                                      ].map((String value) {
-                                        return DropdownMenuItem(
-                                            value: value, child: Text(value));
-                                      }).toList(),
-                                      onChanged: (value) async {
-                                        setState(() {
-                                          selectedValues[orderId] =
-                                              value.toString();
-                                        });
-                                        await FirebaseFirestore.instance
-                                            .collection('orders')
-                                            .doc(orderId)
-                                            .update({
-                                          'track': selectedValues[orderId]
-                                        });
-                                      },
-                                    );
-                                  }),
-                            ),
-                            StreamBuilder(
+                // return Column(
+                //   children: orderDetails.map((order) {
+                //     String orderId = order['orderId'];
+                //     selectedvalue = selectedValues[orderId];
+                return Container(
+                    height: 300,
+                    decoration: BoxDecoration(
+                      color: Colors.green[50],
+                    ),
+                    margin: EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Order ID : ${doc['orderId']}"),
+                        Text("Address : ${doc['address']}"
+                            .split(",")
+                            .join("\n")),
+                        Text("Product: ${doc['product_name']}"),
+                        Text("Quantity: ${doc['quantity']}"),
+                        Text("Total Price: ₹${doc['totalPrice']}"),
+                        SizedBox(
+                          height: 50,
+                          child: StreamBuilder(
                               stream: FirebaseFirestore.instance
                                   .collection('orders')
-                                  .doc(orderId)
+                                  .doc(doc['orderId'])
                                   .snapshots(),
                               builder: (context, snapshot) {
-                                if (!snapshot.hasData ||
-                                    snapshot.data == null) {
-                                  return SizedBox();
-                                }
-
-                                phone = snapshot.data!.get('phone');
-
-                                return TextButton.icon(
-                                  label: Text("Call Customer"),
-                                  onPressed: () async {
-                                    if (phone != null && phone!.isNotEmpty) {
-                                      final Uri url = Uri(
-                                        scheme: 'tel',
-                                        path: phone,
-                                      );
-                                      if (await canLaunchUrl(url)) {
-                                        await launchUrl(url);
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                              content: Text(
-                                                  'Could not launch phone call.')),
-                                        );
-                                      }
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                'Phone number is not available.')),
-                                      );
-                                    }
+                                return DropdownButtonFormField(
+                                  hint: Text(snapshot.data!.get('track')),
+                                  value: selectedvalue,
+                                  items: [
+                                    'recieved',
+                                    'out for delivery',
+                                    'nearest hub',
+                                    'delivered',
+                                    'return',
+                                    'cancelled',
+                                  ].map((String value) {
+                                    return DropdownMenuItem(
+                                        value: value, child: Text(value));
+                                  }).toList(),
+                                  onChanged: (value) async {
+                                    setState(() {
+                                      selectedValues[doc['orderId']] =
+                                          value.toString();
+                                    });
+                                    await FirebaseFirestore.instance
+                                        .collection('orders')
+                                        .doc(doc['orderId'])
+                                        .update({
+                                      'track': selectedValues[doc['orderId']]
+                                    });
                                   },
-                                  icon: Icon(Icons.call),
                                 );
+                              }),
+                        ),
+                        StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection('orders')
+                              .doc(doc['orderId'])
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData || snapshot.data == null) {
+                              return SizedBox();
+                            }
+
+                            phone = snapshot.data!.get('phone');
+
+                            return TextButton.icon(
+                              label: Text("Call Customer"),
+                              onPressed: () async {
+                                if (phone != null && phone!.isNotEmpty) {
+                                  final Uri url = Uri(
+                                    scheme: 'tel',
+                                    path: phone,
+                                  );
+                                  if (await canLaunchUrl(url)) {
+                                    await launchUrl(url);
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Could not launch phone call.')),
+                                    );
+                                  }
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            'Phone number is not available.')),
+                                  );
+                                }
                               },
-                            ),
-                          ],
-                        ));
-                  }).toList(),
-                );
+                              icon: Icon(Icons.call),
+                            );
+                          },
+                        ),
+                      ],
+                    ));
+                //   }).toList(),
+                // );
               },
             );
           }),
